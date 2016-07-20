@@ -1,10 +1,11 @@
 from copy import copy, deepcopy
 
 class State:
-    def __init__(self):
+    def __init__(self, firstPlayer):
         self.players = ["0", "1"]
         self.board = ["-" for i in range(9)]
-        self.curPlayer = 0
+        self.curPlayer = firstPlayer
+        self.curAction = None
 
     def __cannot_win__(self, indices):
         if self.board[indices[0]] != '-':
@@ -17,6 +18,13 @@ class State:
                 return True
 
         return False
+
+    def getActions(self):
+        actions = []
+        for i in range(9):
+            if self.board[i] == '-':
+                actions.append(i)
+        return actions
 
     def check(self):
         # suppose not draw
@@ -60,6 +68,7 @@ class State:
             return False
         self.curPlayer = player
         self.board[pos] = self.players[player]
+        self.curAction = pos
         return True
 
     def __deepcopy__(self, memo):

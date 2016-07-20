@@ -1,5 +1,5 @@
 import pygame
-from sys import exit
+import sys
 from pygame.locals import *
 import time
 import copy
@@ -45,5 +45,7 @@ class GameUI:
                 mousePos = pygame.mouse.get_pos()
                 mousePos = mousePos[0] / (self.SCREEN_WIDTH/3), mousePos[1] / (self.SCREEN_HEIGHT/3)
                 return mousePos
+            elif event.type == pygame.QUIT:
+                sys.exit()
         return None
 
