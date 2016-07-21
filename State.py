@@ -77,6 +77,12 @@ class State:
         newState.board = deepcopy(self.board, memo)
         return newState
 
+    def getBoard(self):
+        return self.board
+
+    def getBoardStr(self):
+        return ''.join(self.board)
+
 
 
 

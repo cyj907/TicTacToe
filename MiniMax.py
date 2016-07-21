@@ -1,4 +1,5 @@
 from copy import deepcopy
+import os
 
 class MiniMax:
     MIN = "min"
@@ -11,6 +12,22 @@ class MiniMax:
                 elem["op"] == MiniMax.MIN and elem["score"] < elem["alpha"]:
             return True
         return False
+
+    @staticmethod
+    def __load_cache__(filename):
+        content = {}
+        lines = [line.rstrip('\n') for line in open(filename, "r")]
+        for line in lines:
+            info = line.split('\t')
+            content[info[0]] = int(info[1])
+        return content
+
+    @staticmethod
+    def __store_cache__(content, filename):
+        with open(filename, "w+") as f:
+            for key in content:
+                val = content[key]
+                f.write(key + "\t" + str(val) + "\n")
 
     @staticmethod
     def __explore__(state, alpha, beta, value, player):
@@ -76,6 +93,13 @@ class MiniMax:
 
     @staticmethod
     def GetPosition(state):
+        # load from cache
+        content_dict = MiniMax.__load_cache__(os.path.join("cache", "state.cache"))
+        board_s = state.getBoardStr()
+        if board_s in content_dict:
+            action = content_dict[board_s]
+            return action / 3, action % 3
+
         q = [{"state": deepcopy(state),
               "alpha": float("-inf"),
               "beta": float("inf"),
@@ -96,6 +120,9 @@ class MiniMax:
             if MiniMax.__should_prune__(elem):
                 if previd == -1:
                     print elem["action"]
+                    board_s = elem["state"].getBoardStr()
+                    content_dict[board_s] = elem["action"]
+                    MiniMax.__store_cache__(content_dict, os.path.join("cache", "state.cache"))
                     return elem["action"] / 3, elem["action"] % 3
 
                 if q[previd]["op"] == MiniMax.MAX:

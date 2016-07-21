@@ -63,6 +63,6 @@ class Game:
 
 
 game = Game()
-game.run(Mode.TwoPlayers)
+game.run(Mode.OnePlayerFirst)
 
 
